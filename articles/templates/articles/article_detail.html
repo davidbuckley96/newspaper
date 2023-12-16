@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Article Detail{% endblock title %}
+
+{% block content %}
+  <div class="article-entry">
+    <h2>{{ article.title }}</h2>
+    <span>By {{ article.author }}  |  {{ article.date }}</span>
+    <p>{{ article.body }}</p>
+  </div>
+
+  <h4>Add a comment</h4>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+  <button class="btn btn-success ml-2" type="submit">Save</button>
+  </form>
+
+  <hr>
+    <h4>Comments</h4>
+    {% for comment in article.comments_set.all %}
+      <p>{{ comment.author }} &middot; {{ comment }}</p>
+    {% endfor %}
+  <hr>
+
+    {% if request.user == article.author %}
+    <p><a href="{% url 'article-update' pk=article.id %}">Update</a>  |
+    <a href="{% url 'article-delete' pk=article.id %}">Delete</a></p>
+  {% endif %}
+
+{% endblock content %}
